@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/bootstrap-theme.min.css}"
+          href="../css/bootstrap-theme.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 560px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-lg" th:object="${restaurant}">
+
+    <div class="py-5 text-center">
+        <h2 th:text="*{name}">식당이름</h2>
+    </div>
+
+    <!-- 추가 -->
+    <h4 th:if="${param.status}" th:text="'저장 완료'"></h4>
+
+    <div class="row">
+        <div class="col-3">
+            사진넣을곳
+        </div>
+        <div class="col-2">
+            <div class="row">
+                <b>주소</b>
+            </div>
+            <div class="row">
+                <b>전화번호</b>
+            </div>
+            <div class="row">
+                <b>배달여부</b>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="row" th:text="*{address}">
+                주소
+            </div>
+            <div class="row" th:text="*{phoneNumber}">
+                전화번호
+            </div>
+            <div class="row" th:text="*{delivery}? 'O' : 'X'">
+                배달여부
+            </div>
+        </div>
+        <h2 class="col-3 align-self-center" th:text="|★*{#numbers.formatDecimal(average_star,0,1)}|">
+            별점
+        </h2>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="row">
+        <div class="col" th:if="${member.memberType.description == '손님'}">
+            <button class="w-100 btn btn-primary btn-lg"
+                    onclick="location.href='addReply.html'"
+                    th:onclick="|location.href='@{/restaurants/{id}/reply(id=*{id})}'|"
+                    th:text="#{button.evaluate}">평가하기</button>
+        </div>
+        <div class="col">
+            <button class="w-100 btn btn-secondary btn-lg"
+                    onclick="location.href='restaurants.html'"
+                    th:onclick="|location.href='@{/restaurants}'|"
+                    type="button" th:text="#{button.home}">홈으로</button>
+        </div>
+    </div>
+
+
+</div> <!-- /container -->
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container" style="max-width: 600px">
+    <div class="py-5 text-center">
+        <h2 th:text="#{restaurant.title}">고대맛집</h2>
+    </div>
+
+    <div class="row">
+        <div class="mb-3 float-left" th:text="|안녕하세요 ${member.name}님!|">로그인 사용자 이름</div>
+    </div>
+
+    <div class="row">
+        <div class="col" th:if="${member.memberType.description == '사장님'}">
+            <button class="btn btn-primary float-start"
+                    onclick="location.href='addForm.html'"
+                    th:onclick="|location.href='@{/restaurants/add}'|"
+                    type="button" th:text="#{button.save}">등록</button>
+        </div>
+        <div class="col">
+            <form th:action="@{/logout}" method="post">
+            <button class="btn btn-danger float-end"
+                    onclick="location.href='home.html'"
+                    type="submit" th:text="#{button.logout}">로그아웃</button>
+            </form>
+
+        </div>
+    </div>
+
+    <hr class="my-4">
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+<!--                <th th:text="#{restaurant.thumbnail}">사진</th>-->
+                <th th:text="#{restaurant.name}">식당명</th>
+                <th th:text="#{restaurant.category}">분류</th>
+                <th th:text="#{restaurant.starCode}">별점</th>
+                <th th:text="#{restaurant.eval_num}">평가수</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="restaurant : ${restaurants}">
+<!--                <td><a>식당 사진</a></td>-->
+                <td><a href="restaurant.html" th:href="@{|/restaurants/${restaurant.id}|}" th:text="${restaurant.name}">식당명</a></td>
+                <td th:text="${restaurant.category.description}">식당분류</td>
+                <td th:text="|★${#numbers.formatDecimal(restaurant.average_star,0,1)}|">0</td>
+                <td th:text="${restaurant.eval_num}">0</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div> <!-- /container -->
+
+</body>
+</html>

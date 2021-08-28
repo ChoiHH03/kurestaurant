@@ -19,8 +19,10 @@ public class Restaurant {
     @Column(name = "restaurant_id")
     private Long id;
 
+    @NotEmpty(message = "식당명을 입력해주세요.")
     private String name;
 
+    @NotEmpty(message = "전화번호를 입력해주세요")
     private String phoneNumber;
     private Long star = 0L;
     private Long eval_num = 0L;
@@ -29,11 +31,14 @@ public class Restaurant {
     @Lob
     private Blob thumbNail;
 
+    @NotEmpty(message = "주소를 입력해주세요.")
     private String address;
 
+    @NotNull(message = "카테고리를 선택해주세요.")
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    @NotNull
     private boolean delivery;
 
     @OneToMany(mappedBy = "restaurant")

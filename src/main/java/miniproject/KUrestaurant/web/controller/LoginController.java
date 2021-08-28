@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @Slf4j
 @Controller
@@ -25,12 +28,13 @@ public class LoginController {
     private final LoginService loginService;
 
     @GetMapping("/login")
-    public String loginForm(@ModelAttribute LoginForm login) {
+    public String loginForm(@ModelAttribute("login") LoginForm login) {
         return "login/loginForm";
     }
 
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute LoginForm login, BindingResult bindingResult,
+    public String login(@Validated @ModelAttribute("login") LoginForm login, BindingResult bindingResult,
+                        @RequestParam(defaultValue = "/") String redirectURL,
                         HttpServletRequest request) {
 
         if (bindingResult.hasErrors()) {
@@ -49,7 +53,7 @@ public class LoginController {
         HttpSession session = request.getSession();
         session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
 
-        return "redirect:/";
+        return "redirect:" + redirectURL;
     }
 
     @PostMapping("/logout")
