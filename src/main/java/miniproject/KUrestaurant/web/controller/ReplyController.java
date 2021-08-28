@@ -67,4 +67,18 @@ public class ReplyController {
         redirectAttributes.addAttribute("restaurantId", restaurantId);
         return "redirect:/restaurants/{restaurantId}";
     }
+
+    @PostMapping("/{restaurantId}/{replyId}/remove")
+    public String removeReply(@PathVariable long restaurantId, @PathVariable long replyId,
+                              @SessionAttribute(name = "loginMember", required = false) Member loginMember) {
+
+        Reply reply = replyService.findOne(replyId);
+        if (reply.getMember().getId() != loginMember.getId()) {
+            return "redirect:/restaurants/{restaurantId}";
+        }
+
+        replyService.removeReply(reply);
+        return "redirect:/restaurants/{restaurantId}";
+
+    }
 }

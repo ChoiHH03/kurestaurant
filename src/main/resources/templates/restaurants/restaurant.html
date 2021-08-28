@@ -77,7 +77,7 @@
                 <th th:text="#{reply.writer}">작성자</th>
                 <th th:text="#{reply.comment}">코멘트</th>
                 <th th:text="#{reply.star}">별점</th>
-<!--                <th th:text="#{restaurant.eval_num}">수정</th>-->
+                <th th:text="#{reply.remove}">삭제</th>
             </tr>
             </thead>
             <tbody>
@@ -87,7 +87,14 @@
                 <td th:text="${reply.member.name}">작성자</a></td>
                 <td th:text="${reply.comment}">코멘트</td>
                 <td th:text="|★${reply.star}|">0</td>
-<!--                <td th:text="${restaurant.eval_num}">0</td>-->
+                <td>
+                    <form th:if="${reply.member} == ${member}"
+                            th:action="@{/restaurants/{restaurant_id}/{reply_id}/remove(restaurant_id=${restaurant.id}, reply_id=${reply.id})}" method="post">
+                        <button class="btn-danger"
+                                onclick="location.href='restaurant.html'"
+                                type="submit">삭제</button>
+                    </form>
+                </td>
             </tr>
             </tbody>
         </table>

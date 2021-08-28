@@ -51,7 +51,7 @@ public class Restaurant {
     //==비즈니스 로직==//
     /** 평균 별점 계산 */
     public void calcAverageStar() {
-        this.average_star = (float)this.star / this.eval_num;
+        this.average_star = (this.eval_num > 0) ? (float)this.star / this.eval_num : 0;
     }
 
     /** 별점 추가 */
