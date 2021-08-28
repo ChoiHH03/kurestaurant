@@ -17,17 +17,23 @@ public class Reply {
     @Column(name="reply_id")
     private Long id;
 
+    @NotNull
+    @Range(min=1, max=5)
     private int star;
+
     private String comment;
 
+    @NotNull
     private LocalDate date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @NotNull
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
+    @NotNull
     private Restaurant restaurant;
 
     //==생성 메서드==//

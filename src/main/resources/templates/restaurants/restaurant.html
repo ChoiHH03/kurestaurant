@@ -56,6 +56,32 @@
 
     <hr class="my-4">
 
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th th:text="#{reply.date}">작성일</th>
+                <th th:text="#{reply.writer}">작성자</th>
+                <th th:text="#{reply.comment}">코멘트</th>
+                <th th:text="#{reply.star}">별점</th>
+<!--                <th th:text="#{restaurant.eval_num}">수정</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="reply : *{replies}">
+                <!--                <td><a>식당 사진</a></td>-->
+                <td th:text="${reply.date}">작성일</td>
+                <td th:text="${reply.member.name}">작성자</a></td>
+                <td th:text="${reply.comment}">코멘트</td>
+                <td th:text="|★${reply.star}|">0</td>
+<!--                <td th:text="${restaurant.eval_num}">0</td>-->
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <hr class="my-4">
+
     <div class="row">
         <div class="col" th:if="${member.memberType.description == '손님'}">
             <button class="w-100 btn btn-primary btn-lg"
