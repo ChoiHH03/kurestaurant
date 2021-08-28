@@ -49,4 +49,8 @@ public class MemberRestaurantService {
     public List<Restaurant> findByMember(Member member) {
         return memberRestaurantRepository.findByMember(member);
     }
+
+    public MemberRestaurant findById(Long memberRestaurantId) {
+        return memberRestaurantRepository.findById(memberRestaurantId);
+    }
 }

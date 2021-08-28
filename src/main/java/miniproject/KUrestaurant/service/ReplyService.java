@@ -26,6 +26,9 @@ public class ReplyService {
 
     @Transactional
     public Long saveReply(Reply reply) {
+        if (reply.getStar() > 5 || reply.getStar() < 0) {
+            throw new IllegalArgumentException("별점은 0점 이상 5점 미만이어야 합니다");
+        }
         replyRepository.save(reply);
         return reply.getId();
     }

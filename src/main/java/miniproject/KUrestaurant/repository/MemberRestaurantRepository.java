@@ -37,4 +37,8 @@ public class MemberRestaurantRepository {
                 .stream().filter(m -> m.getRestaurant() == restaurant)
                 .findFirst();
     }
+
+    public MemberRestaurant findById(Long memberRestaurantId) {
+        return em.find(MemberRestaurant.class, memberRestaurantId);
+    }
 }
