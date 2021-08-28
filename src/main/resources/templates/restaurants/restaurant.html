@@ -20,6 +20,19 @@
         <h2 th:text="*{name}">식당이름</h2>
     </div>
 
+    <div class="row" th:if="${member.memberType.description == '손님'}">
+        <form th:if="${pick_status != true}" th:action="@{/restaurants/{id}/pick(id=*{id})}" method="post">
+            <button class="btn-outline-danger float-end"
+                    onclick="location.href='restaurant.html'"
+                    type="submit">찜하기</button>
+        </form>
+        <form th:if="${pick_status == true}" th:action="@{/restaurants/{id}/unpick?redirectURI={param}(id=*{id}, param=${#httpServletRequest.requestURI})}" method="post">
+            <button class="btn-outline-danger float-end"
+                    onclick="location.href='restaurant.html'"
+                    type="submit">찜 해제하기</button>
+        </form>
+    </div>
+
     <!-- 추가 -->
     <h4 th:if="${param.status}" th:text="'저장 완료'"></h4>
 
