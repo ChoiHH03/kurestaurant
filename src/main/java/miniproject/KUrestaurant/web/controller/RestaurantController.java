@@ -1,13 +1,18 @@
 package miniproject.KUrestaurant.web.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import miniproject.KUrestaurant.domain.Category;
 import miniproject.KUrestaurant.domain.Member;
 import miniproject.KUrestaurant.domain.Restaurant;
+import miniproject.KUrestaurant.file.FileStore;
 import miniproject.KUrestaurant.service.MemberRestaurantService;
 import miniproject.KUrestaurant.service.MemberService;
 import miniproject.KUrestaurant.service.RestaurantService;
+import miniproject.KUrestaurant.web.form.RestaurantForm;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 @Slf4j
@@ -26,6 +32,7 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
     private final MemberService memberService;
     private final MemberRestaurantService memberRestaurantService;
+    private final FileStore fileStore;
 
     @ModelAttribute("categories")
     public Category[] categories() {
@@ -56,14 +63,15 @@ public class RestaurantController {
 
     @GetMapping("/add")
     public String addForm(Model model) {
-        model.addAttribute("restaurant", new Restaurant());
+        model.addAttribute("restaurant", new RestaurantForm());
         return "restaurants/addForm";
     }
 
+    @SneakyThrows
     @PostMapping("/add")
-    public String addRestaurant(@Validated @ModelAttribute("restaurant") Restaurant restaurant, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String addRestaurant(@Validated @ModelAttribute("restaurant") RestaurantForm form, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
-        if (!restaurant.getPhoneNumber().chars().allMatch(Character::isDigit)) {
+        if (!form.getPhoneNumber().matches("\\d{2,3}-\\d{3,4}-\\d{3,4}")) {
             bindingResult.rejectValue("phoneNumber","type",null);
         }
 
@@ -71,6 +79,16 @@ public class RestaurantController {
             log.info("errors={}", bindingResult);
             return "restaurants/addForm";
         }
+
+        String fileName = fileStore.storeFile(form.getAttachFile());
+
+        Restaurant restaurant = new Restaurant();
+        restaurant.setName(form.getName());
+        restaurant.setPhoneNumber(form.getPhoneNumber());
+        restaurant.setAddress(form.getAddress());
+        restaurant.setCategory(form.getCategory());
+        restaurant.setDelivery(form.isDelivery());
+        restaurant.setImage(fileName);
 
         Long savedRestaurantId = restaurantService.saveRestaurant(restaurant);
 
@@ -85,5 +103,13 @@ public class RestaurantController {
         List<Restaurant> restaurants = memberRestaurantService.findByMember(member);
         model.addAttribute("restaurants", restaurants);
         return "restaurants/pickRestaurants";
+    }
+
+    @ResponseBody
+    @GetMapping("/images/{filename}")
+    public Resource downloadImage(@PathVariable String filename) throws MalformedURLException {
+        log.info("fileName={}", filename);
+        log.info("fileRoute={}", fileStore.getFullPath(filename));
+        return new UrlResource("file:" + fileStore.getFullPath(filename));
     }
 }

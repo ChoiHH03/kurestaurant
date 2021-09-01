@@ -26,10 +26,9 @@ public class Restaurant {
     private String phoneNumber;
     private Long star = 0L;
     private Long eval_num = 0L;
-    private float average_star;
+    private float average_star = 0;
 
-    @Lob
-    private Blob thumbNail;
+    private String image;
 
     @NotEmpty(message = "주소를 입력해주세요.")
     private String address;
