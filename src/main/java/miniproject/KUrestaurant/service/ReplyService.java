@@ -1,14 +1,11 @@
 package miniproject.KUrestaurant.service;
 
 import lombok.RequiredArgsConstructor;
-import miniproject.KUrestaurant.domain.Member;
 import miniproject.KUrestaurant.domain.Reply;
-import miniproject.KUrestaurant.domain.Restaurant;
 import miniproject.KUrestaurant.repository.ReplyRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -30,7 +27,7 @@ public class ReplyService {
     @Transactional
     public void removeReply(Reply reply) {
         Reply.removeReply(reply);
-        replyRepository.remove(reply);
+        replyRepository.delete(reply);
     }
 
     public List<Reply> findReplies() {
@@ -38,6 +35,6 @@ public class ReplyService {
     }
 
     public Reply findOne(Long replyId) {
-        return replyRepository.findOne(replyId);
+        return replyRepository.findById(replyId).get();
     }
 }

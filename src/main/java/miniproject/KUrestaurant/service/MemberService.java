@@ -18,23 +18,26 @@ public class MemberService {
 
     @Transactional
     public Long join(Member member) {
-        Optional<Member> loginMember = memberRepository.findByLoginId(member.getLoginId());
+/*        Optional<Member> loginMember = memberRepository.findByLoginId(member.getLoginId());
         if (loginMember.isPresent()) {
             return null;
-        }
+        }*/
         memberRepository.save(member);
         return member.getId();
     }
 
     public Member findOne(Long memberId) {
-        return memberRepository.findOne(memberId);
+        return memberRepository.findById(memberId).get();
     }
 
     public Long findByName(String name) {
         List<Member> member = memberRepository.findByName(name);
-        if (!member.isEmpty()) {
-            return member.get(0).getId();
-        }
-        return null;
+        return (!member.isEmpty()) ? member.get(0).getId() : null;
+    }
+
+    public Long findByLoginId(String loginId) {
+        Optional<Member> member = memberRepository.findByLoginId(loginId);
+        return (member.isPresent()) ? member.get().getId() :  null;
+
     }
 }

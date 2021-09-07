@@ -27,13 +27,13 @@ public class MemberRestaurantService {
 
     @Transactional
     public void unpickRestaurant(Member member, Restaurant restaurant) {
-        MemberRestaurant memberRestaurant = memberRestaurantRepository.findOne(member, restaurant).get();
+        MemberRestaurant memberRestaurant = memberRestaurantRepository.findByMemberAndRestaurant(member, restaurant).get();
         MemberRestaurant.removeMemberRestaurant(memberRestaurant);
-        memberRestaurantRepository.remove(memberRestaurant);
+        memberRestaurantRepository.delete(memberRestaurant);
     }
 
     public boolean isPicked(Member member, Restaurant restaurant) {
-        Optional<MemberRestaurant> memberRestaurant = memberRestaurantRepository.findOne(member, restaurant);
+        Optional<MemberRestaurant> memberRestaurant = memberRestaurantRepository.findByMemberAndRestaurant(member, restaurant);
 
         if (memberRestaurant.isPresent()) {
             return true;
@@ -42,7 +42,7 @@ public class MemberRestaurantService {
     }
 
     public MemberRestaurant findOne(Member member, Restaurant restaurant) {
-        return memberRestaurantRepository.findOne(member, restaurant).get();
+        return memberRestaurantRepository.findByMemberAndRestaurant(member, restaurant).get();
     }
 
     public List<Restaurant> findByMember(Member member) {
@@ -50,6 +50,6 @@ public class MemberRestaurantService {
     }
 
     public MemberRestaurant findById(Long memberRestaurantId) {
-        return memberRestaurantRepository.findById(memberRestaurantId);
+        return memberRestaurantRepository.findById(memberRestaurantId).get();
     }
 }

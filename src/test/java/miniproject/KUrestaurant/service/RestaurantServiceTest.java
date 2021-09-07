@@ -1,7 +1,6 @@
 package miniproject.KUrestaurant.service;
 
-import miniproject.KUrestaurant.domain.Restaurant;
-import miniproject.KUrestaurant.repository.RestaurantRepository;
+import miniproject.KUrestaurant.domain.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,8 +17,9 @@ class RestaurantServiceTest {
 
     @Test
     public void 레스토랑등록() {
+        Member member = new Member("member", "loginId", "member", MemberType.OWNER);
+        Restaurant restaurant = new Restaurant("restaurant", "02-000-0000", "서울", Category.CAFE, true, member, null);
 
-        Restaurant restaurant = new Restaurant();
         Long id = restaurantService.saveRestaurant(restaurant);
 
         assertEquals(restaurantService.findOne(id), restaurant);
@@ -27,8 +27,8 @@ class RestaurantServiceTest {
 
     @Test
     public void 레스토랑삭제() {
-
-        Restaurant restaurant = new Restaurant();
+        Member member = new Member("member", "loginId", "member", MemberType.OWNER);
+        Restaurant restaurant = new Restaurant("restaurant", "02-000-0000", "서울", Category.CAFE, true, member, null);
         Long id = restaurantService.saveRestaurant(restaurant);
         restaurantService.removeRestaurant(id);
 

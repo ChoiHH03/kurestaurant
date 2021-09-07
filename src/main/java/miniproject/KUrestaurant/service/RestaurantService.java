@@ -23,8 +23,8 @@ public class RestaurantService {
 
     @Transactional
     public void removeRestaurant(Long restaurantId) {
-        Restaurant restaurant = restaurantRepository.findOne(restaurantId);
-        restaurantRepository.remove(restaurant);
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).get();
+        restaurantRepository.delete(restaurant);
     }
 
     public List<Restaurant> findRestaurants() {
@@ -32,7 +32,7 @@ public class RestaurantService {
     }
 
     public Restaurant findOne(Long restaurantId) {
-        return restaurantRepository.findOne(restaurantId);
+        return restaurantRepository.findById(restaurantId).get();
     }
 
 }

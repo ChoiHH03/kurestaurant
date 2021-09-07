@@ -40,23 +40,24 @@ public class MemberController {
             return "members/addMemberForm";
         }
 
-        Long memberId = memberService.findByName(form.getName());
+        Long memberIdByName = memberService.findByName(form.getName());
+        Long memberIdByLoginId = memberService.findByLoginId(form.getLoginId());
 
-        if (memberId != null) {
+        if (memberIdByName != null) {
             bindingResult.rejectValue("name", "duplicate",null);
         }
 
-        Member member = new Member(form.getName(), form.getLoginId(), form.getPassword(), form.getMemberType());
-
-        Long joinId = memberService.join(member);
-
-        if (joinId == null) {
+        if (memberIdByLoginId != null) {
             bindingResult.rejectValue("loginId", "duplicate",null);
         }
 
         if (bindingResult.hasErrors()) {
             return "members/addMemberForm";
         }
+
+        Member member = new Member(form.getName(), form.getLoginId(), form.getPassword(), form.getMemberType());
+        memberService.join(member);
+
 
         return "redirect:/";
     }
