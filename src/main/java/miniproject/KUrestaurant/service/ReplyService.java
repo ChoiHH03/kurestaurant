@@ -19,12 +19,6 @@ public class ReplyService {
     private final ReplyRepository replyRepository;
 
     @Transactional
-    public Reply createReply(Member member, Restaurant restaurant, int star, String comment, LocalDate date) {
-        Reply reply = Reply.createReply(member, restaurant, star, comment, date);
-        return reply;
-    }
-
-    @Transactional
     public Long saveReply(Reply reply) {
         if (reply.getStar() > 5 || reply.getStar() < 0) {
             throw new IllegalArgumentException("별점은 0점 이상 5점 미만이어야 합니다");

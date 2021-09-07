@@ -2,6 +2,7 @@ package miniproject.KUrestaurant.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import miniproject.KUrestaurant.domain.Member;
+import miniproject.KUrestaurant.domain.MemberRestaurant;
 import miniproject.KUrestaurant.domain.Restaurant;
 import miniproject.KUrestaurant.service.MemberRestaurantService;
 import miniproject.KUrestaurant.service.MemberService;
@@ -24,7 +25,9 @@ public class PickController {
                                 ) {
         Member member = memberService.findOne(loginMember.getId());
         Restaurant restaurant = restaurantService.findOne(restaurantId);
-        memberRestaurantService.pickRestaurant(member, restaurant);
+
+        MemberRestaurant memberRestaurant = new MemberRestaurant(member, restaurant);
+        memberRestaurantService.pickRestaurant(memberRestaurant);
         return "redirect:/restaurants/{restaurantId}";
     }
 

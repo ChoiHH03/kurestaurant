@@ -39,11 +39,11 @@
     </div>
 
     <hr class="my-4">
+
     <div>
         <table class="table">
             <thead>
             <tr>
-<!--                <th th:text="#{restaurant.thumbnail}">사진</th>-->
                 <th th:text="#{restaurant.name}">식당명</th>
                 <th th:text="#{restaurant.category}">분류</th>
                 <th th:text="#{restaurant.starCode}">별점</th>
@@ -52,7 +52,6 @@
             </thead>
             <tbody>
             <tr th:each="restaurant : ${restaurants}">
-<!--                <td><a>식당 사진</a></td>-->
                 <td><a href="restaurant.html" th:href="@{|/restaurants/${restaurant.id}|}" th:text="${restaurant.name}">식당명</a></td>
                 <td th:text="${restaurant.category.description}">식당분류</td>
                 <td th:text="|★${#numbers.formatDecimal(restaurant.average_star,0,1)}|">0</td>
@@ -61,6 +60,8 @@
             </tbody>
         </table>
     </div>
+
+    <hr class="my-4">
 
 </div> <!-- /container -->
 

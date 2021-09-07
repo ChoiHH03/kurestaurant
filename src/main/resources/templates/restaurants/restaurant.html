@@ -29,6 +29,14 @@
                     type="submit">찜 해제하기</button>
         </form>
     </div>
+    <div class="row" th:if="${member.id == restaurant.member.id}">
+        <div class="col">
+            <button class="btn btn-danger float-end"
+                    onclick="location.href='restaurants.html'"
+                    th:onclick="|location.href='@{/restaurants/{id}/delete(id=*{id})}'|"
+                    type="button" th:text="#{button.delete}">삭제</button>
+        </div>
+    </div>
 
     <!-- 추가 -->
     <h4 th:if="${param.status}" th:text="'저장 완료'"></h4>

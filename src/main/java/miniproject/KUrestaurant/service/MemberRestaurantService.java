@@ -19,8 +19,7 @@ public class MemberRestaurantService {
     private final MemberRestaurantRepository memberRestaurantRepository;
 
     @Transactional
-    public Long pickRestaurant(Member member, Restaurant restaurant) {
-        MemberRestaurant memberRestaurant = MemberRestaurant.pickMemberRestaurant(member, restaurant);
+    public Long pickRestaurant(MemberRestaurant memberRestaurant) {
         memberRestaurantRepository.save(memberRestaurant);
 
         return memberRestaurant.getId();

@@ -1,6 +1,8 @@
 package miniproject.KUrestaurant.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -10,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
     @Id
@@ -39,4 +42,11 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<Reply> replies = new ArrayList<>();
+
+    public Member(String name, String loginId, String password, MemberType memberType) {
+        this.name = name;
+        this.loginId = loginId;
+        this.password = password;
+        this.memberType = memberType;
+    }
 }

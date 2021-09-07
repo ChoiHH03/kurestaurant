@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import miniproject.KUrestaurant.domain.Category;
+import miniproject.KUrestaurant.domain.Member;
 import miniproject.KUrestaurant.domain.MemberRestaurant;
 import miniproject.KUrestaurant.domain.Reply;
 import org.springframework.web.multipart.MultipartFile;

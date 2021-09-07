@@ -1,8 +1,6 @@
 package miniproject.KUrestaurant.service;
 
-import miniproject.KUrestaurant.domain.Member;
-import miniproject.KUrestaurant.domain.MemberRestaurant;
-import miniproject.KUrestaurant.domain.Restaurant;
+import miniproject.KUrestaurant.domain.*;
 import miniproject.KUrestaurant.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +19,12 @@ class MemberRestaurantServiceTest {
     @Test
     public void 레스토랑찜() {
 
-        Member member = new Member();
-        Restaurant restaurant = new Restaurant();
+        Member member = new Member("member", "loginId", "member", MemberType.OWNER);
+        Restaurant restaurant = new Restaurant("restaurant", "02-000-0000", "서울", Category.CAFE, true, member, null);
 
-        Long id = memberRestaurantService.pickRestaurant(member, restaurant);
+        MemberRestaurant memberRestaurant = new MemberRestaurant(member, restaurant);
+
+        Long id = memberRestaurantService.pickRestaurant(memberRestaurant);
 
         assertEquals(memberRestaurantService.findOne(member, restaurant),memberRestaurantService.findById(id));
         assertEquals(member.getMemberRestaurants().size(),1);
@@ -33,10 +33,11 @@ class MemberRestaurantServiceTest {
     @Test
     public void 레스토랑찜해제() {
 
-        Member member = new Member();
-        Restaurant restaurant = new Restaurant();
+        Member member = new Member("member", "loginId", "member", MemberType.OWNER);
+        Restaurant restaurant = new Restaurant("restaurant", "02-000-0000", "서울", Category.CAFE, true, member, null);
 
-        Long id = memberRestaurantService.pickRestaurant(member, restaurant);
+        MemberRestaurant memberRestaurant = new MemberRestaurant(member, restaurant);
+
         memberRestaurantService.unpickRestaurant(member, restaurant);
 
         assertEquals(member.getMemberRestaurants().size(), 0);

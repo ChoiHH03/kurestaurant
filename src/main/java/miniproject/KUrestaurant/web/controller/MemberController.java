@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import miniproject.KUrestaurant.domain.Member;
 import miniproject.KUrestaurant.domain.MemberType;
 import miniproject.KUrestaurant.service.MemberService;
+import miniproject.KUrestaurant.web.form.MemberForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,22 +29,24 @@ public class MemberController {
     }
 
     @GetMapping("/add")
-    public String addForm(@ModelAttribute Member member) {
+    public String addForm(@ModelAttribute("form") MemberForm form) {
         return "members/addMemberForm";
     }
 
     @PostMapping("/add")
-    public String save(@Valid @ModelAttribute Member member, BindingResult bindingResult) {
+    public String save(@Valid @ModelAttribute("form") MemberForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
             return "members/addMemberForm";
         }
 
-        Long memberId = memberService.findByName(member.getName());
+        Long memberId = memberService.findByName(form.getName());
 
         if (memberId != null) {
             bindingResult.rejectValue("name", "duplicate",null);
         }
+
+        Member member = new Member(form.getName(), form.getLoginId(), form.getPassword(), form.getMemberType());
 
         Long joinId = memberService.join(member);
 

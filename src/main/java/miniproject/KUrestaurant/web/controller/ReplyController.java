@@ -61,7 +61,7 @@ public class ReplyController {
 
         Restaurant restaurant = restaurantService.findOne(restaurantId);
         Member member = memberService.findOne(loginMember.getId());
-        Reply reply = replyService.createReply(member, restaurant, form.getStar(), form.getComment(), LocalDate.now());
+        Reply reply = new Reply(member, restaurant, form.getStar(), form.getComment(), LocalDate.now());
         replyService.saveReply(reply);
 
         redirectAttributes.addAttribute("restaurantId", restaurantId);
@@ -70,7 +70,7 @@ public class ReplyController {
 
     @PostMapping("/{restaurantId}/{replyId}/remove")
     public String removeReply(@PathVariable long restaurantId, @PathVariable long replyId,
-                              @SessionAttribute(name = "loginMember", required = false) Member loginMember) {
+                              @SessionAttribute(name = "loginMember") Member loginMember) {
 
         Reply reply = replyService.findOne(replyId);
         if (reply.getMember().getId() != loginMember.getId()) {

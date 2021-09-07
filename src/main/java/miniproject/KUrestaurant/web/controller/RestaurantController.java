@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import miniproject.KUrestaurant.domain.Category;
 import miniproject.KUrestaurant.domain.Member;
+import miniproject.KUrestaurant.domain.Reply;
 import miniproject.KUrestaurant.domain.Restaurant;
 import miniproject.KUrestaurant.file.FileStore;
 import miniproject.KUrestaurant.service.MemberRestaurantService;
@@ -18,8 +19,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 
@@ -40,7 +43,7 @@ public class RestaurantController {
     }
 
     @GetMapping
-    public String Restaurants(@SessionAttribute(name = "loginMember", required = false) Member loginMember, Model model) {
+    public String Restaurants(@SessionAttribute(name = "loginMember") Member loginMember, Model model) {
         List<Restaurant> restaurants = restaurantService.findRestaurants();
         model.addAttribute("restaurants", restaurants);
 
@@ -50,7 +53,7 @@ public class RestaurantController {
 
     @GetMapping("/{restaurantId}")
     public String Restaurant(@PathVariable long restaurantId,
-                             @SessionAttribute(name = "loginMember", required = false) Member loginMember,
+                             @SessionAttribute(name = "loginMember") Member loginMember,
                              Model model) {
         Restaurant restaurant = restaurantService.findOne(restaurantId);
         Member member = memberService.findOne(loginMember.getId());
@@ -67,12 +70,14 @@ public class RestaurantController {
         return "restaurants/addForm";
     }
 
-    @SneakyThrows
     @PostMapping("/add")
-    public String addRestaurant(@Validated @ModelAttribute("restaurant") RestaurantForm form, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String addRestaurant(@Validated @ModelAttribute("restaurant") RestaurantForm form, BindingResult bindingResult,
+                                @SessionAttribute(name = "loginMember") Member loginMember,
+                                RedirectAttributes redirectAttributes) throws IOException {
 
         if (!form.getPhoneNumber().matches("\\d{2,3}-\\d{3,4}-\\d{3,4}")) {
             bindingResult.rejectValue("phoneNumber","type",null);
+            return "restaurants/addForm";
         }
 
         if (bindingResult.hasErrors()) {
@@ -82,13 +87,7 @@ public class RestaurantController {
 
         String fileName = fileStore.storeFile(form.getAttachFile());
 
-        Restaurant restaurant = new Restaurant();
-        restaurant.setName(form.getName());
-        restaurant.setPhoneNumber(form.getPhoneNumber());
-        restaurant.setAddress(form.getAddress());
-        restaurant.setCategory(form.getCategory());
-        restaurant.setDelivery(form.isDelivery());
-        restaurant.setImage(fileName);
+        Restaurant restaurant = new Restaurant(form.getName(), form.getPhoneNumber(), form.getAddress(), form.getCategory(), form.isDelivery(), loginMember, fileName);
 
         Long savedRestaurantId = restaurantService.saveRestaurant(restaurant);
 
@@ -98,11 +97,22 @@ public class RestaurantController {
     }
 
     @GetMapping("/pick")
-    public String pickList(@SessionAttribute(name = "loginMember", required = false) Member loginMember, Model model){
+    public String pickList(@SessionAttribute(name = "loginMember") Member loginMember, Model model){
         Member member = memberService.findOne(loginMember.getId());
         List<Restaurant> restaurants = memberRestaurantService.findByMember(member);
         model.addAttribute("restaurants", restaurants);
         return "restaurants/pickRestaurants";
+    }
+
+    @GetMapping("/{restaurantId}/delete")
+    public String deleteRestaurant(@PathVariable Long restaurantId,
+                                   @SessionAttribute(name = "loginMember") Member loginMember) {
+        Restaurant restaurant = restaurantService.findOne(restaurantId);
+        if (restaurant.getMember().getId() != loginMember.getId()) {
+            return "redirect:/restaurants/{restaurantId}";
+        }
+        restaurantService.removeRestaurant(restaurantId);
+        return "redirect:/restaurants";
     }
 
     @ResponseBody

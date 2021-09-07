@@ -3,11 +3,23 @@
 <head>
     <meta charset="utf-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <style>
+        .image {
+            display: inline-block;
+        }
+        .text {
+            display: inline-block;
+            vertical-align: -6px;
+        }
+    </style>
 </head>
 <body>
 <div class="container" style="max-width: 600px">
     <div class="py-5 text-center">
-        <h2 th:text="#{title}">고대맛집</h2>
+            <img src="image/ku.gif" width="40" class="image">
+        <span class="text">
+            <h2 th:text="#{title}">고대맛집</h2>
+        </span>
     </div>
     <div class="row">
         <div class="col">

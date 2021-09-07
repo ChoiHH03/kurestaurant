@@ -1,6 +1,8 @@
 package miniproject.KUrestaurant.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Restaurant {
 
     @Id
@@ -46,8 +49,23 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant")
     private List<Reply> replies = new ArrayList<>();
 
+    @NotNull
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    public Restaurant(String name, String phoneNumber, String address, Category category, boolean delivery, Member member, String image) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.category = category;
+        this.delivery = delivery;
+        this.member = member;
+        this.image = image;
+    }
 
     //==비즈니스 로직==//
+
     /** 평균 별점 계산 */
     public void calcAverageStar() {
         this.average_star = (this.eval_num > 0) ? (float)this.star / this.eval_num : 0;

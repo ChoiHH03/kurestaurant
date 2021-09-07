@@ -3,7 +3,7 @@ package miniproject.KUrestaurant.domain;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter
 public class StarCode {
 
     private int star_num;

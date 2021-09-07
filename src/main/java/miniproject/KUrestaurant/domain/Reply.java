@@ -1,6 +1,8 @@
 package miniproject.KUrestaurant.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 
@@ -9,7 +11,8 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
-@Getter @Setter
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Reply {
 
     @Id
@@ -36,20 +39,16 @@ public class Reply {
     @NotNull
     private Restaurant restaurant;
 
-    //==생성 메서드==//
-    public static Reply createReply(Member member, Restaurant restaurant, int star, String comment, LocalDate date) {
-        Reply reply = new Reply();
-        reply.setStar(star);
-        reply.setComment(comment);
-        reply.setDate(date);
+    public Reply(Member member, Restaurant restaurant, int star, String comment, LocalDate date) {
+        this.member = member;
+        this.restaurant = restaurant;
+        this.star = star;
+        this.comment = comment;
+        this.date = date;
 
-        reply.setMember(member);
-        member.getReplies().add(reply);
-        reply.setRestaurant(restaurant);
-        restaurant.getReplies().add(reply);
-        restaurant.addStar(reply);
-
-        return reply;
+        member.getReplies().add(this);
+        restaurant.getReplies().add(this);
+        restaurant.addStar(this);
     }
 
     //==제거 메서드==//
