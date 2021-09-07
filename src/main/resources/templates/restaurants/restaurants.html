@@ -41,6 +41,27 @@
     <hr class="my-4">
 
     <div>
+        <form th:object="${condition}" class="row row-cols-auto justify-content-end gx-1">
+            <div class="cols-12">
+                <input type="text" th:field="*{name}" class="form-control form-control-sm" placeholder="식당명"/>
+            </div>
+            <div class="cols-12">
+                <select th:field="*{category}" class="form-select form-select-sm">
+                    <option value=>카테고리</option>
+                    <option th:each="category : ${T(miniproject.KUrestaurant.domain.Category).values()}"
+                            th:value="${category}"
+                            th:text="${category.description}">한식
+                    </option>
+                </select>
+            </div>
+            <div class="cols-12">
+                <button type="submit" class="btn btn-light btn-sm mb-2">검색</button>
+            </div>
+
+        </form>
+    </div>
+
+    <div>
         <table class="table">
             <thead>
             <tr>

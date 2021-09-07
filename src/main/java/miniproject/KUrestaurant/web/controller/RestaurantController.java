@@ -3,10 +3,7 @@ package miniproject.KUrestaurant.web.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import miniproject.KUrestaurant.domain.Category;
-import miniproject.KUrestaurant.domain.Member;
-import miniproject.KUrestaurant.domain.Reply;
-import miniproject.KUrestaurant.domain.Restaurant;
+import miniproject.KUrestaurant.domain.*;
 import miniproject.KUrestaurant.file.FileStore;
 import miniproject.KUrestaurant.service.MemberRestaurantService;
 import miniproject.KUrestaurant.service.MemberService;
@@ -16,6 +13,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -43,12 +42,33 @@ public class RestaurantController {
     }
 
     @GetMapping
-    public String Restaurants(@SessionAttribute(name = "loginMember") Member loginMember, Model model) {
-        List<Restaurant> restaurants = restaurantService.findRestaurants();
+    public String Restaurants(@SessionAttribute(name = "loginMember") Member loginMember,
+                              @RequestParam(required = false) String name,
+                              @RequestParam(name = "category", defaultValue = "none") String categoryName,
+                              @ModelAttribute("condition") RestaurantSearchCond condition, Model model) {
+
+        Category category = checkCategory(categoryName);
+        RestaurantSearchCond cond = new RestaurantSearchCond();
+        cond.setName(name);
+        cond.setCategory(category);
+
+        List<Restaurant> restaurants = restaurantService.findRestaurantsCond(cond);
         model.addAttribute("restaurants", restaurants);
 
         model.addAttribute("member", loginMember);
         return "restaurants/restaurants";
+    }
+
+    private Category checkCategory(String categoryName) {
+        for (Category category : Category.values()) {
+            System.out.println(category.toString());
+            System.out.println(categoryName);
+            System.out.println(category.toString().equals(categoryName));
+            if (categoryName.equals(category.toString())) {
+                return category;
+            }
+        }
+        return null;
     }
 
     @GetMapping("/{restaurantId}")
