@@ -10,6 +10,6 @@ import java.util.List;
 public interface RestaurantRepositoryCustom {
     List<Restaurant> search(RestaurantSearchCond cond);
 
-    Page<Restaurant> searchPage(RestaurantSearchCond cond, Pageable pageable);
+    Page<Restaurant> searchAndSort(RestaurantSearchCond cond, Pageable pageable);
     Page<Restaurant> sortByEvalNum(RestaurantSearchCond cond, Pageable pageable);
 }

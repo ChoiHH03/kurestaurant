@@ -1,7 +1,10 @@
 package miniproject.KUrestaurant.repository;
 
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import miniproject.KUrestaurant.domain.Category;
@@ -10,7 +13,9 @@ import miniproject.KUrestaurant.domain.RestaurantSearchCond;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static miniproject.KUrestaurant.domain.QRestaurant.*;
@@ -30,11 +35,13 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
     }
 
     @Override
-    public Page<Restaurant> searchPage(RestaurantSearchCond cond, Pageable pageable) {
+    public Page<Restaurant> searchAndSort(RestaurantSearchCond cond, Pageable pageable) {
+        List<OrderSpecifier> orderSpecifiers = orderCondition(pageable);
         //fetchResuts 사용
         QueryResults<Restaurant> results = queryFactory
                 .selectFrom(restaurant)
-                .where(allEq(cond))
+                .where(nameEq(cond.getName()),categoryEq(cond.getCategory()))
+                .orderBy(orderSpecifiers.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
@@ -45,12 +52,22 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
         return new PageImpl<>(content, pageable, total);
     }
 
+    private List<OrderSpecifier> orderCondition(Pageable pageable) {
+        List<OrderSpecifier> result = new ArrayList<>();
+        for (Sort.Order o :pageable.getSort()) {
+            PathBuilder<Restaurant> orderByExpression = new PathBuilder<Restaurant>(Restaurant.class, "restaurant");
+            result.add(new OrderSpecifier(Order.DESC,orderByExpression.get(o.getProperty())));
+        }
+        return result;
+    }
+
     @Override
     public Page<Restaurant> sortByEvalNum(RestaurantSearchCond cond, Pageable pageable) {
+        OrderSpecifier<Long> asc = restaurant.eval_num.asc();
         //fetch와 fetchCount 별도의 쿼리로 최적화
         List<Restaurant> content = queryFactory
                 .selectFrom(restaurant)
-                .where(allEq(cond))
+                .where(nameEq(cond.getName()),categoryEq(cond.getCategory()))
                 .orderBy(restaurant.eval_num.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -58,7 +75,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 
         long total = queryFactory
                 .selectFrom(restaurant)
-                .where(allEq(cond))
+                .where(nameEq(cond.getName()),categoryEq(cond.getCategory()))
                 .orderBy(restaurant.eval_num.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -73,9 +90,5 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryCustom {
 
     private BooleanExpression categoryEq(Category category) {
         return (category != null) ? restaurant.category.eq(category) : null;
-    }
-
-    private BooleanExpression allEq(RestaurantSearchCond cond) {
-        return nameEq(cond.getName()).and(categoryEq(cond.getCategory()));
     }
 }

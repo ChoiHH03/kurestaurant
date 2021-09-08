@@ -11,6 +11,11 @@ import miniproject.KUrestaurant.service.RestaurantService;
 import miniproject.KUrestaurant.web.form.RestaurantForm;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -45,30 +50,21 @@ public class RestaurantController {
     public String Restaurants(@SessionAttribute(name = "loginMember") Member loginMember,
                               @RequestParam(required = false) String name,
                               @RequestParam(name = "category", defaultValue = "none") String categoryName,
+                              @PageableDefault(size = 5) Pageable pageable,
                               @ModelAttribute("condition") RestaurantSearchCond condition, Model model) {
+
 
         Category category = checkCategory(categoryName);
         RestaurantSearchCond cond = new RestaurantSearchCond();
         cond.setName(name);
         cond.setCategory(category);
 
-        List<Restaurant> restaurants = restaurantService.findRestaurantsCond(cond);
+        Page<Restaurant> result = restaurantService.findRestaurantsCond(cond, pageable);
+        List<Restaurant> restaurants = result.getContent();
         model.addAttribute("restaurants", restaurants);
 
         model.addAttribute("member", loginMember);
         return "restaurants/restaurants";
-    }
-
-    private Category checkCategory(String categoryName) {
-        for (Category category : Category.values()) {
-            System.out.println(category.toString());
-            System.out.println(categoryName);
-            System.out.println(category.toString().equals(categoryName));
-            if (categoryName.equals(category.toString())) {
-                return category;
-            }
-        }
-        return null;
     }
 
     @GetMapping("/{restaurantId}")
@@ -141,5 +137,14 @@ public class RestaurantController {
         log.info("fileName={}", filename);
         log.info("fileRoute={}", fileStore.getFullPath(filename));
         return new UrlResource("file:" + fileStore.getFullPath(filename));
+    }
+
+    private Category checkCategory(String categoryName) {
+        for (Category category : Category.values()) {
+            if (categoryName.equals(category.toString())) {
+                return category;
+            }
+        }
+        return null;
     }
 }

@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import miniproject.KUrestaurant.domain.Restaurant;
 import miniproject.KUrestaurant.domain.RestaurantSearchCond;
 import miniproject.KUrestaurant.repository.RestaurantRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +38,7 @@ public class RestaurantService {
         return restaurantRepository.findById(restaurantId).get();
     }
 
-    public List<Restaurant> findRestaurantsCond(RestaurantSearchCond cond) {
-        return restaurantRepository.search(cond);
+    public Page<Restaurant> findRestaurantsCond(RestaurantSearchCond cond, Pageable pageable) {
+        return restaurantRepository.searchAndSort(cond, pageable);
     }
 }

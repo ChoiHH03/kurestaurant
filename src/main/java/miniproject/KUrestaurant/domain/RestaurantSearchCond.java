@@ -6,4 +6,5 @@ import lombok.Data;
 public class RestaurantSearchCond {
     private String name;
     private Category category;
+    private SortType sort;
 }

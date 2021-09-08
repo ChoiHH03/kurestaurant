@@ -42,10 +42,10 @@
 
     <div>
         <form th:object="${condition}" class="row row-cols-auto justify-content-end gx-1">
-            <div class="cols-12">
+            <div class="cols-3">
                 <input type="text" th:field="*{name}" class="form-control form-control-sm" placeholder="식당명"/>
             </div>
-            <div class="cols-12">
+            <div class="cols-2">
                 <select th:field="*{category}" class="form-select form-select-sm">
                     <option value=>카테고리</option>
                     <option th:each="category : ${T(miniproject.KUrestaurant.domain.Category).values()}"
@@ -54,7 +54,16 @@
                     </option>
                 </select>
             </div>
-            <div class="cols-12">
+            <div class="cols-2">
+                <select th:field="*{sort}" class="form-select form-select-sm">
+                    <option value=>정렬</option>
+                    <option th:each="sort : ${T(miniproject.KUrestaurant.domain.SortType).values()}"
+                            th:value="${sort}"
+                            th:text="${sort.description}">정렬
+                    </option>
+                </select>
+            </div>
+            <div class="cols-1">
                 <button type="submit" class="btn btn-light btn-sm mb-2">검색</button>
             </div>
 
