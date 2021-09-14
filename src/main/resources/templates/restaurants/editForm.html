@@ -11,6 +11,10 @@
             border-color: #dc3545;
             color: #dc3545;
         }
+        .warning {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
     </style>
 </head>
 <body>
@@ -49,29 +53,30 @@
         <div>
             <label for="phoneNumber" th:text="#{restaurant.image}">이미지</label>
             <input type="file" id="attachFile" class="form-control" multiple="multiple" th:field="*{attachFile}" >
+            <div class="warning">썸네일 수정 시에만 파일을 업로드 해주세요.</div>
         </div>
         <p>
             <!-- radio button -->
-            <div>
-                <div>카테고리</div>
-                <div th:each="category : ${categories}" class="form-check form-check-inline">
-                    <input type="radio" th:field="*{category}" th:value="${category.name()}"
-                           th:errorclass="field-error" class="form-check-input">
-                    <label th:for="${#ids.prev('category')}" th:text="${category.description}"
-                           class="form-check-label">
-                        한식
-                    </label>
-                </div>
-                <div class="field-error" th:errors="*{category}" />
+        <div>
+            <div>카테고리</div>
+            <div th:each="category : ${categories}" class="form-check form-check-inline">
+                <input type="radio" th:field="*{category}" th:value="${category.name()}"
+                       th:errorclass="field-error" class="form-check-input">
+                <label th:for="${#ids.prev('category')}" th:text="${category.description}"
+                       class="form-check-label">
+                    한식
+                </label>
             </div>
+            <div class="field-error" th:errors="*{category}" />
+        </div>
         </p>
         <p>
             <!-- single checkbox -->
-            <div>
-                <label th:text="#{restaurant.delivery}">배달 여부</label>
-                <input type="checkbox" id="delivery" th:field="*{delivery}" th:errorclass="field-error" class="form-check-input">
-            </div>
-            <div class="field-error" th:errors="*{delivery}" />
+        <div>
+            <label th:text="#{restaurant.delivery}">배달 여부</label>
+            <input type="checkbox" id="delivery" th:field="*{delivery}" th:errorclass="field-error" class="form-check-input">
+        </div>
+        <div class="field-error" th:errors="*{delivery}" />
         </p>
 
         <hr class="my-4">

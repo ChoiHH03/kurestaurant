@@ -30,6 +30,12 @@ public class RestaurantService {
         restaurantRepository.delete(restaurant);
     }
 
+    @Transactional
+    public void editRestaurant(Long restaurantId, String name, String phoneNumber, String address, boolean delivery, String image) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).get();
+        restaurant.edit(name, phoneNumber, address, delivery, image);
+    }
+
     public List<Restaurant> findRestaurants() {
         return restaurantRepository.findAll();
     }

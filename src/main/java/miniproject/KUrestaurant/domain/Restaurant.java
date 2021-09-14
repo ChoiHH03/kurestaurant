@@ -84,4 +84,21 @@ public class Restaurant {
         eval_num--;
         this.calcAverageStar();
     }
+
+    /** 수정 메서드 */
+    public void edit(String name, String phoneNumber, String address, boolean delivery, String image) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.delivery = delivery;
+
+        if (image != null) {
+            this.image = image;
+        }
+    }
+
+    /** 이미지 수정 메서드 */
+    public void editImange(String image) {
+        this.image = image;
+    }
 }

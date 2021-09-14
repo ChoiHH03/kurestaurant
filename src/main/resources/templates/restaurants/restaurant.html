@@ -31,10 +31,16 @@
     </div>
     <div class="row" th:if="${member.id == restaurant.member.id}">
         <div class="col">
-            <button class="btn btn-danger float-end"
+            <button class="btn btn-danger float-end m-1"
                     onclick="location.href='restaurants.html'"
                     th:onclick="|location.href='@{/restaurants/{id}/delete(id=*{id})}'|"
                     type="button" th:text="#{button.delete}">삭제</button>
+            
+            <button class="btn btn-primary float-end m-1"
+                    onclick="location.href='restaurants.html'"
+                    th:onclick="|location.href='@{/restaurants/{id}/edit(id=*{id})}'|"
+                    type="button" th:text="#{button.edit}">수정</button>
+
         </div>
     </div>
 
