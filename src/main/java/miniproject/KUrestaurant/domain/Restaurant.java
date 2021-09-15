@@ -86,10 +86,11 @@ public class Restaurant {
     }
 
     /** 수정 메서드 */
-    public void edit(String name, String phoneNumber, String address, boolean delivery, String image) {
+    public void edit(String name, String phoneNumber, String address, Category category, boolean delivery, String image) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.category = category;
         this.delivery = delivery;
 
         if (image != null) {

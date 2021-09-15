@@ -62,6 +62,9 @@
                 <b>전화번호</b>
             </div>
             <div class="row">
+                <b>카테고리</b>
+            </div>
+            <div class="row">
                 <b>배달여부</b>
             </div>
         </div>
@@ -71,6 +74,9 @@
             </div>
             <div class="row" th:text="*{phoneNumber}">
                 전화번호
+            </div>
+            <div class="row" th:text="*{category.description}">
+                카테고리
             </div>
             <div class="row" th:text="*{delivery}? 'O' : 'X'">
                 배달여부

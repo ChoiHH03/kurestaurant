@@ -93,24 +93,23 @@
 
     <hr class="my-4">
 
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
-            <li th:class="${page.first} ? 'disabled'">
-                <a class="page-link" th:href="${page.first} ? '#' : @{/restaurants(page=${boardList.number})}" aria-label="Previous">
+    <nav aria-label="Page navigation example", th:object="${pageInfo}">
+        <ul class="pagination justify-content-center" th:with="start=*{start}, end=*{end}">
+            <li th:class="(*{isFirstPage}) ? 'page-item disabled' : 'page-item'">
+                <a class="page-link" aria-label="Previous" th:href="@{/restaurants(name=*{nameCondition},category=*{categoryCondition},sort=*{sort},page=*{start}-5)}">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
+            <li th:each="num : ${#numbers.sequence(start, end)}" th:class="(*{pageNum} == ${num}) ? 'page-item active' : 'page-item'">
+                <a class="page-link" th:href="@{/restaurants(name=*{nameCondition},category=*{categoryCondition},sort=*{sort},page=${num})}" th:text="${num}+1">1</a>
+            </li>
+            <li th:class="(*{isLastPage}) ? 'page-item disabled' : 'page-item'">
+                <a class="page-link" aria-label="Next"th:href="@{/restaurants(name=*{nameCondition},category=*{categoryCondition},sort=*{sort},page=*{start}+5)}">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
         </ul>
     </nav>
-
 </div> <!-- /container -->
 
 </body>

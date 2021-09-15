@@ -8,6 +8,7 @@ import miniproject.KUrestaurant.file.FileStore;
 import miniproject.KUrestaurant.service.MemberRestaurantService;
 import miniproject.KUrestaurant.service.MemberService;
 import miniproject.KUrestaurant.service.RestaurantService;
+import miniproject.KUrestaurant.web.PageInfo;
 import miniproject.KUrestaurant.web.form.RestaurantForm;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
@@ -52,21 +53,22 @@ public class RestaurantController {
     @GetMapping
     public String Restaurants(@SessionAttribute(name = "loginMember") Member loginMember,
                               @RequestParam(required = false) String name,
-                              @RequestParam(name = "category", defaultValue = "none") String categoryName,
+                              @RequestParam(name = "category", defaultValue = "") String categoryName,
+                              @RequestParam(required = false) String sort,
                               @PageableDefault(size = 5) Pageable pageable,
                               @ModelAttribute("condition") RestaurantSearchCond condition, Model model) {
-
 
         Category category = checkCategory(categoryName);
         RestaurantSearchCond cond = new RestaurantSearchCond();
         cond.setName(name);
         cond.setCategory(category);
 
-        Page<Restaurant> result = restaurantService.findRestaurantsCond(cond, pageable);
-        List<Restaurant> restaurants = result.getContent();
+        Page<Restaurant> page = restaurantService.findRestaurantsCond(cond, pageable);
+        List<Restaurant> restaurants = page.getContent();
+        PageInfo pageInfo = new PageInfo(page.getNumber(), page.getTotalPages(), name, categoryName, sort);
         model.addAttribute("restaurants", restaurants);
-        model.addAttribute("page", result);
         model.addAttribute("member", loginMember);
+        model.addAttribute("pageInfo", pageInfo);
         return "restaurants/restaurants";
     }
 
@@ -185,7 +187,7 @@ public class RestaurantController {
             log.info("delete image");
         }
 
-        restaurantService.editRestaurant(restaurantId, form.getName(), form.getPhoneNumber(), form.getAddress(), form.isDelivery(), fileName);
+        restaurantService.editRestaurant(restaurantId, form.getName(), form.getPhoneNumber(), form.getAddress(), form.getCategory(), form.isDelivery(), fileName);
 
         return "redirect:/restaurants/{restaurantId}";
     }
@@ -209,7 +211,15 @@ public class RestaurantController {
 
     @ResponseBody
     @GetMapping("/api")
-    public Page<Restaurant> searchMemberV3(RestaurantSearchCond condition, Pageable pageable) {
-        return restaurantService.findRestaurantsCond(condition, pageable);
+    public Page<Restaurant> api(@RequestParam(required = false) String name,
+                                @RequestParam(name = "category", defaultValue = "none") String categoryName,
+                                @PageableDefault(size = 5) Pageable pageable) {
+
+        Category category = checkCategory(categoryName);
+        RestaurantSearchCond cond = new RestaurantSearchCond();
+        cond.setName(name);
+        cond.setCategory(category);
+
+        return restaurantService.findRestaurantsCond(cond, pageable);
     }
 }

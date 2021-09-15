@@ -34,7 +34,7 @@ public class InitProject {
             Member member = new Member("member", "member", "member", MemberType.OWNER);
             em.persist(member);
 
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 31; i++) {
                 Restaurant chinese = new Restaurant("식당" + i, "00-000-000", "서울", Category.CHINESE, false, member, null);
                 Restaurant italian = new Restaurant("식당" + i, "00-000-000", "서울", Category.ITALIAN, false, member, null);
 

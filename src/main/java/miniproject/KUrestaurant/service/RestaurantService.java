@@ -1,6 +1,7 @@
 package miniproject.KUrestaurant.service;
 
 import lombok.RequiredArgsConstructor;
+import miniproject.KUrestaurant.domain.Category;
 import miniproject.KUrestaurant.domain.Restaurant;
 import miniproject.KUrestaurant.domain.RestaurantSearchCond;
 import miniproject.KUrestaurant.repository.RestaurantRepository;
@@ -31,9 +32,9 @@ public class RestaurantService {
     }
 
     @Transactional
-    public void editRestaurant(Long restaurantId, String name, String phoneNumber, String address, boolean delivery, String image) {
+    public void editRestaurant(Long restaurantId, String name, String phoneNumber, String address, Category category, boolean delivery, String image) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).get();
-        restaurant.edit(name, phoneNumber, address, delivery, image);
+        restaurant.edit(name, phoneNumber, address, category, delivery, image);
     }
 
     public List<Restaurant> findRestaurants() {
